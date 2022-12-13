@@ -1,7 +1,9 @@
-import React from "react";
+import React, {Component} from "react";
 import css from "./Statistics.css";
 
-class Statistics extends React.Component {
+import Notification from "../Notification/Notification";
+
+class Statistics extends Component {
 
     state = {
         good: 0,
@@ -23,12 +25,26 @@ class Statistics extends React.Component {
             }
         })
     };
+   
     voteBad= () => {
         this.setState(prevState => ({
             bad: prevState.bad + 1,
             
         }))
     };
+
+    countTotalFeedback() {
+        const { good, neutral, bad } = this.state;
+        const total = good + neutral + bad;
+        return total;
+      };
+
+    countPositiveFeedbackPercentage() {
+        const { good } = this.state;
+        const total = this.countTotalFeedback();
+        const positiveFeedbackPercentage = (good / total) * 100;
+        return Math.round(positiveFeedbackPercentage);
+      }
 
     
     render() {
@@ -41,7 +57,8 @@ class Statistics extends React.Component {
             <button className="button" type="button" onClick={this.voteBad}>bad</button>
           </div> 
           <h2 className="title">Statistics</h2>
-          <ul className="stat-list">
+          {this.countTotalFeedback() !== 0 ? (
+            <ul className="stat-list">
             <li className="item">
                 <span className="label">good:</span>
                 <span className="value">{this.state.good}</span>
@@ -56,10 +73,17 @@ class Statistics extends React.Component {
             </li>
             <li className="item">
                 <span className="label">total</span>
-                <span className="value">{this.total}</span>
+                <span className="value">{this.countTotalFeedback()}</span>
             </li>
-    
+            <li className="item">
+                <span className="label">Positive feedback</span>
+                <span className="value">{this.countPositiveFeedbackPercentage()}%</span>
+            </li>
           </ul>
+          ) : (
+            <Notification message="There is no feedback" />
+          )}
+          
         </div>
     )}
     
