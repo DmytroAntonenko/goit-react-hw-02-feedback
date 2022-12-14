@@ -1,9 +1,10 @@
 import React, {Component} from "react";
-import css from "./Statistics.css";
-
+import css from "./State.css";
+import Section from "../Section/Section";
+import Statistics from "../Statistics/Statistics";
 import Notification from "../Notification/Notification";
 
-class Statistics extends Component {
+class State extends Component {
 
     state = {
         good: 0,
@@ -56,37 +57,23 @@ class Statistics extends Component {
             <button className="button" type="button" onClick={this.voteNeutral}>neutral</button>
             <button className="button" type="button" onClick={this.voteBad}>bad</button>
           </div> 
-          <h2 className="title">Statistics</h2>
-          {this.countTotalFeedback() !== 0 ? (
-            <ul className="stat-list">
-            <li className="item">
-                <span className="label">good:</span>
-                <span className="value">{this.state.good}</span>
-            </li>
-            <li className="item">
-                <span className="label">neutral:</span>
-                <span className="value">{this.state.neutral}</span>
-            </li>
-            <li className="item">
-                <span className="label">bad:</span>
-                <span className="value">{this.state.bad}</span>
-            </li>
-            <li className="item">
-                <span className="label">total</span>
-                <span className="value">{this.countTotalFeedback()}</span>
-            </li>
-            <li className="item">
-                <span className="label">Positive feedback</span>
-                <span className="value">{this.countPositiveFeedbackPercentage()}%</span>
-            </li>
-          </ul>
-          ) : (
-            <Notification message="There is no feedback" />
-          )}
+          <Section title="Statistics">
+          {this.countTotalFeedback() !== 0 ? 
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+            />
+          : 
+            <Notification message="There is no feedback"/>
+          }
+        </Section>
           
         </div>
     )}
     
 }
 
-export default Statistics;
+export default State;
