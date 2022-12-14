@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 
+import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
 import Section from "./Section/Section";
 import Statistics from "./Statistics/Statistics";
 import Notification from "./Notification/Notification";
+import css from './App.module.css';
 
 class App extends Component  {
   state = {
@@ -10,27 +12,12 @@ class App extends Component  {
     neutral: 0,
     bad: 0
 };
-  
-voteGood = () => {
-    this.setState(prevState => {
-        return {
-            good: prevState.good + 1,
-        }
-    })
-};
-voteNeutral= () => {
-    this.setState(prevState => {
-        return {
-            neutral: prevState.neutral + 1,
-        }
-    })
-};
 
-voteBad= () => {
-    this.setState(prevState => ({
-        bad: prevState.bad + 1,
-        
-    }))
+handleLeaveFeedback = event => {
+  const name = event.currentTarget.name;
+  this.setState(prevState => ({
+    [name]: prevState[name] + 1,
+  }));
 };
 
 countTotalFeedback() {
@@ -49,14 +36,16 @@ countPositiveFeedbackPercentage() {
 
 render() {
   const { good, neutral, bad } = this.state;
+  const options = Object.keys(this.state);
     return (
-    <div className="Statistics">
-      <h1 className="title">Plese leave feedback</h1>
-      <div className="Statistics__controls">
-        <button className="button" type="button" onClick={this.voteGood}>good</button>
-        <button className="button" type="button" onClick={this.voteNeutral}>neutral</button>
-        <button className="button" type="button" onClick={this.voteBad}>bad</button>
-      </div> 
+      <div className ={css.statistics}>
+       <Section title="Please leave feedback">
+           <FeedbackOptions
+             options={options}
+             onLeaveFeedback={this.handleLeaveFeedback}
+             />
+         </Section>
+
       <Section title="Statistics">
       {this.countTotalFeedback() !== 0 ? 
         <Statistics
@@ -69,26 +58,11 @@ render() {
       : 
         <Notification message="There is no feedback"/>
       }
-    </Section>
-      
+      </Section>
     </div>
 )}
 };
 
-export default App;
 
-  // return (
-  //   <div
-  //     style={{
-  //       height: '100vh',
-  //       display: 'flex',
-  //       justifyContent: 'center',
-  //       alignItems: 'center',
-  //       fontSize: 40,
-  //       color: '#010101'
-  //     }}
-  //   >
-  //     <State/>
-  //   </div>
-  // );
+export default App;
 
